@@ -1,8 +1,16 @@
+import os
 import json
 from hashlib import md5
 import base64
 
 import requests
+
+CAINIAO_PARAMETERS = {
+    'CAINIAO_APPKEY': os.environ.get('CAINIAO_APPKEY', ''),
+    'CAINIAO_APPSECRET': os.environ.get('CAINIAO_APPSECRET', ''),
+    'CAINIAO_TOKEN': os.environ.get('CAINIAO_TOKEN', ''),
+    'CAINIAO_URL': os.environ.get('CAINIAO_URL', '')
+}
 
 
 class BaseWaybill(object):
@@ -10,18 +18,17 @@ class BaseWaybill(object):
     目前仅支持`json`类型的数据传输。
     """
     def __init__(
-        self, msg_type='', information={},
-        appkey='', appsecret='', token='', url=''
+        self, msg_type='', information={}, parameters=CAINIAO_PARAMETERS
     ):
         self.headers = {
             'content-type': 'application/x-www-form-urlencoded;charset=utf-8',
         }
         self.msg_type = msg_type
         self.information = information
-        self.appkey = appkey
-        self.appsecret = appsecret
-        self.token = token
-        self.url = url
+        self.appkey = parameters.get('CAINIAO_APPKEY')
+        self.appsecret = parameters.get('CAINIAO_APPSECRET')
+        self.token = parameters.get('CAINIAO_TOKEN')
+        self.url = parameters.get('CAINIAO_URL')
 
     @property
     def content(self):
