@@ -82,3 +82,53 @@ async def main():
 
 asyncio.run(main())
 ```
+
+## CloudPrint
+
+1. 第一种使用方法
+
+```python
+import asyncio
+
+from cainiao import CloudPrintClient, CloudPrint
+from cainiao.templates import Content, Document, TaskForm
+
+content = Content(**{
+    "data": {"nick": "Hello"},
+    "templateURL": "http://cloudprint.cainiao.com/template/standard/278250/1",
+})
+
+document = Document(**{
+    "documentID": "1",
+    "contents": [content for _ in range(5)]
+})
+
+task = TaskForm(printer="Microsoft Print to PDF", documents=[document])
+
+
+async def main():
+    async with CloudPrintClient(ws_url='ws://127.0.0.1:13528') as ws:
+        cloudprint = CloudPrint(ws=ws)
+        print(await cloudprint.get_printers())
+        print(await cloudprint.print(task=task.content))
+
+
+asyncio.run(main())
+```
+
+1. 第二种使用方法
+
+```python
+# -- snip --
+
+async def main():
+    # 注意使用区别，session.close() 才是关闭 aiohttp.ClientSession()
+    session, ws = await CloudPrintClient(ws_url='ws://127.0.0.1:13528').connect()
+    cloudprint = CloudPrint(ws=ws)
+    print(await cloudprint.get_printers())
+    print(await cloudprint.print(task=task.content))
+    await session.close()
+
+
+asyncio.run(main())
+```
