@@ -194,3 +194,56 @@ class WayBillGetForm(object):
             "storeCode": None
         }
         return data
+
+# CloudPrint Templates
+
+
+class Content(object):
+    def __init__(
+        self, data: dict = ..., templateURL: str = ...,
+    ):
+        self.data = data
+        self.templateURL = templateURL
+
+
+class Document(object):
+    def __init__(
+        self,
+        documentID: str = ...,
+        contents: List[Content] = ...,
+    ):
+        self.documentID = documentID
+        self.contents = contents
+
+
+class TaskForm(object):
+    """
+    打印任务模板
+
+    注：因为打印机质量乘次不齐，建议 1 个 task 使用 一个 document，可以有效避免重打问题。
+    """
+    def __init__(
+        self,
+        preview: bool = True,
+        printer: str = ...,
+        documents: List[Document] = ...,
+    ):
+        self.preview = preview
+        self.printer = printer
+        self.documents = documents
+
+    @property
+    def content(self):
+        data = {
+            "taskID": str(uuid4()),
+            "preview": self.preview,
+            "printer": self.printer,
+            "documents": [{
+                "documentID": document.documentID,
+                "contents": [{
+                    "data": content.data,
+                    "templateURL": content.templateURL,
+                } for content in document.contents],
+            } for document in self.documents]
+        }
+        return data

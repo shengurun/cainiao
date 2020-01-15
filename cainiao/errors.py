@@ -68,3 +68,12 @@ class TradeOrderInfoError(BaseException):
 
     def __str__(self):
         return self.reason
+
+
+class CloudPrintConnectError(BaseException):
+    def __init__(self, e):
+        self.reason = "The websocket connect failed, {}".format(e)
+        super(BaseException, self).__init__(self, self.reason)
+
+    def __str__(self):
+        return self.reason
