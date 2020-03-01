@@ -2,6 +2,8 @@
 
 适用于[菜鸟电子面单](https://www.cainiao.com/markets/cnwww/cnwaybill)服务的非官方Python SDK。
 
+**现由于已从原公司离职，没有 token 和 appsecret 来继续进行研究开发，项目于 2020 年 3 月 1 日搁置，没有后续开发的计划。**
+
 ## Install
 
 ```shell
